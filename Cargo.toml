@@ -7,8 +7,8 @@ repository = "https://github.com/rigwild/shell-gpt-rs"
 homepage = "https://github.com/rigwild/shell-gpt-rs"
 keywords = ["shell", "gpt", "chatgpt", "openai", "bash"]
 categories = ["command-line-utilities"]
-description = "Ask ChatGPT to generate a shell script for you"
-license = "MIT OR Apache-2.0"
+description = "Ask ChatGPT for a shell script, code, or anything, directly from your terminal 🤖🧠👨‍💻"
+license = "MIT"
 
 [[bin]]
 name = "gpt"

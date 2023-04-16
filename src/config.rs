@@ -1,5 +1,5 @@
-use crate::encryption;
 use crate::errors::ShellGptError;
+use crate::{encryption, openai};
 use anyhow::{anyhow, Context};
 use directories::ProjectDirs;
 use std::fs::File;
@@ -13,6 +13,7 @@ pub struct CliArgs {
     pub input: String,
     pub show_help: bool,
     pub clear_saved_config: bool,
+    pub pre_prompt: openai::PrePrompt,
 }
 
 #[derive(Debug)]
@@ -27,10 +28,33 @@ impl Config {
         Config { openai_api_key }
     }
 
-    pub fn clear_saved_config() -> anyhow::Result<()> {
+    pub fn clear_saved_config() {
         let path = get_config_dir_path();
         fs::remove_dir_all(path).unwrap_or_else(|e| panic!("{:#?}", e));
-        Ok(())
+        println!("Local configuration was cleared!");
+    }
+
+    pub fn parse_cli_args(args: Vec<String>) -> CliArgs {
+        let args: Vec<String> = args.iter().skip(1).cloned().collect();
+
+        let input = args.join(" ");
+        let mut show_help = false;
+        let mut clear_saved_config = false;
+        let mut pre_prompt = openai::PrePrompt::NoPrePrompt;
+
+        args.iter().for_each(|x| match x.as_str() {
+            "--help" | "-h" => show_help = true,
+            "--shell" | "--bash" | "--script" | "-s" => pre_prompt = openai::PrePrompt::ShellScript,
+            "--remove-config" | "--delete-config" | "--clear-config" => clear_saved_config = true,
+            _ => {}
+        });
+
+        CliArgs {
+            input,
+            show_help,
+            clear_saved_config,
+            pre_prompt,
+        }
     }
 }
 

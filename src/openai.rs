@@ -2,10 +2,25 @@ use crate::errors::ShellGptError;
 use reqwest::blocking::Client as HttpClient;
 use serde::{Deserialize, Serialize};
 
-const PROMPT: &'static str = "I want you to generate a valid bash script following a specific request. \
+const OPENAI_MODEL: &'static str = "gpt-3.5-turbo";
+
+const PRE_PROMPT_SHELL_SCRIPT: &'static str = "I want you to generate a valid bash script following a specific request. \
                     You must only answer with the script that will be run on the target system. \
                     Do not write something like \"this is the script you asked:\", just print the script ONLY.
                     Do not write a warning message, only print the script itself.";
+
+#[derive(Debug, Copy, Clone)]
+pub enum PrePrompt {
+    NoPrePrompt,
+    ShellScript,
+}
+
+fn get_pre_prompt(pre_prompt: PrePrompt) -> String {
+    match pre_prompt {
+        PrePrompt::NoPrePrompt => String::new(),
+        PrePrompt::ShellScript => PRE_PROMPT_SHELL_SCRIPT.to_string(),
+    }
+}
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "role", content = "content", rename_all = "lowercase")]
@@ -54,9 +69,9 @@ struct ChatResponse {
     pub usage: ChatResponseUsage,
 }
 
-fn request_chatgpt(messages: Vec<Message>, api_key: &str) -> anyhow::Result<String> {
+fn request_chatgpt_api(messages: Vec<Message>, api_key: &str) -> anyhow::Result<String> {
     let body = ChatRequestInput {
-        model: "gpt-3.5-turbo".to_string(),
+        model: OPENAI_MODEL.to_string(),
         messages,
     };
 
@@ -80,7 +95,8 @@ fn request_chatgpt(messages: Vec<Message>, api_key: &str) -> anyhow::Result<Stri
     }
 }
 
-pub fn ask_chatgpt(input: &str, api_key: &str) -> anyhow::Result<String> {
-    let messages = vec![Message::User(PROMPT), Message::User(input)];
-    request_chatgpt(messages, api_key)
+pub fn ask_chatgpt(input: &str, pre_prompt: PrePrompt, api_key: &str) -> anyhow::Result<String> {
+    let pre_prompt = get_pre_prompt(pre_prompt);
+    let messages = vec![Message::User(pre_prompt.as_str()), Message::User(input)];
+    request_chatgpt_api(messages, api_key)
 }

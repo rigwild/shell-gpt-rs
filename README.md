@@ -9,7 +9,6 @@ Ask ChatGPT for a shell script, code, or anything, directly from your terminal ð
 [![Cargo Build and Test](https://github.com/rigwild/shell-gpt-rs/actions/workflows/cargo.yml/badge.svg)](https://github.com/rigwild/shell-gpt-rs/actions/workflows/cargo.yml)
 [![Downloads](https://img.shields.io/crates/v/shell-gpt)](https://crates.io/crates/shell-gpt)
 [![Downloads](https://img.shields.io/crates/d/shell-gpt)](https://crates.io/crates/shell-gpt)
-[![License](https://img.shields.io/crates/l/shell-gpt)](./README.md#license)
 
 </div>
 

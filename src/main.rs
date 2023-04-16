@@ -5,7 +5,7 @@ use std::{env, process};
 fn main() {
     let cli_args = Config::parse_cli_args(env::args().collect());
 
-    if cli_args.show_help {
+    if cli_args.show_help || cli_args.input.trim().is_empty() {
         println!("
 Ask ChatGPT for a shell script, code, or anything, directly from your terminal 🤖🧠👨‍💻
 

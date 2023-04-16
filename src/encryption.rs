@@ -93,13 +93,6 @@ pub fn decrypt(ciphertext: impl AsRef<[u8]>, password: impl AsRef<str>) -> anyho
     open(&key, ciphertext).with_context(|| "Ciphertext was tampered with")
 }
 
-/// Get a 24-byte random nonce
-fn nonce() -> anyhow::Result<[u8; 24]> {
-    let mut result = [0u8; 24];
-    rand::thread_rng().fill_bytes(&mut result);
-    Ok(result)
-}
-
 /// Get a SecretKey that will be used to encrypt/decrypt the data
 ///
 /// # Arguments

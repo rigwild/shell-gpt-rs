@@ -19,7 +19,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load_config(_cli_args: CliArgs) -> Config {
+    pub fn load_config(_cli_args: &CliArgs) -> Config {
         let openai_api_key = load_api_key().unwrap_or_else(|_| {
             register_api_key().unwrap_or_else(|e| {
                 panic!("{:#?}", e);
@@ -120,7 +120,7 @@ fn get_config_openai_api_key_path() -> PathBuf {
     get_config_dir_path().join("openai_api_key.encrypted.txt")
 }
 
-/// Generate the password used to encrypt the configuration with.
+/// Generate the password used to encrypt the configuration file with.
 ///
 /// Password is `username_ENCRYPTION_PASSWORD_SUFFIX`
 fn get_config_encryption_password() -> String {

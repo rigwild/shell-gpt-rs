@@ -14,6 +14,8 @@ pub struct CliArgs {
     pub show_help: bool,
     pub clear_saved_config: bool,
     pub pre_prompt: openai::PrePrompt,
+    /// Just print the answer - No spinner, pretty-print, or interactive action
+    pub raw: bool,
 }
 
 #[derive(Debug)]
@@ -41,11 +43,13 @@ impl Config {
         let mut show_help = false;
         let mut clear_saved_config = false;
         let mut pre_prompt = openai::PrePrompt::NoPrePrompt;
+        let mut raw = false;
 
-        args.iter().for_each(|x| match x.as_str() {
+        args.iter().for_each(|x| match x.trim() {
             "--help" | "-h" => show_help = true,
             "--shell" | "--bash" | "--script" | "-s" => pre_prompt = openai::PrePrompt::ShellScript,
             "--remove-config" | "--delete-config" | "--clear-config" => clear_saved_config = true,
+            "--raw" => raw = true,
             _ => {}
         });
 
@@ -54,6 +58,7 @@ impl Config {
             show_help,
             clear_saved_config,
             pre_prompt,
+            raw,
         }
     }
 }

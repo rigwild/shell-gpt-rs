@@ -1,5 +1,5 @@
-use shell_gpt_rs::config::Config;
-use shell_gpt_rs::{run};
+use shell_gpt::config::Config;
+use shell_gpt::{run};
 use std::{env, process};
 
 fn main() {
@@ -12,7 +12,8 @@ Ask ChatGPT for a shell script, code, or anything, directly from your terminal ð
 Usage: gpt <your_question>
 
 Options:
-  -s  --shell           Ask ChatGPT for a shell script                                                  [boolean]
+  -s  --shell           Ask ChatGPT for a shell script                                                  [boolean=false]
+      --raw             Only output the script, no spinner or interactive prompt                        [boolean=false]
       --clear-config    Remove local config, including the OpenAI API key at `~/.config/shell-gpt-rs`   [boolean]
   -h, --help            Show help                                                                       [boolean]
 
@@ -21,6 +22,7 @@ Examples:
   gpt --shell show the list of files in the current directory with human-readable file size
   gpt -s find the top 10 biggest files in the current directory
   gpt -s find the top 10 biggest files in the current tree recursive
+  gpt --raw --shfind the top 10 biggest files in the current tree recursive
 
 shell-gpt-rs - https://github.com/rigwild/shell-gpt-rs
 ");

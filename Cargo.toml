@@ -1,5 +1,5 @@
 [package]
-name = "shell-gpt-rs"
+name = "shell-gpt"
 version = "0.1.0"
 edition = "2021"
 authors = ["rigwild <me@rigwild.dev>"]
@@ -24,3 +24,4 @@ orion = "0.17.4"
 anyhow = "1.0.70"
 users = "0.11.0"
 spinoff = "0.7.0"
+regex = "1.7.3"

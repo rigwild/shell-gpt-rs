@@ -10,7 +10,9 @@ categories = ["command-line-utilities"]
 description = "Ask ChatGPT to generate a shell script for you"
 license = "MIT OR Apache-2.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "gpt"
+path = "src/main.rs"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
@@ -21,3 +23,4 @@ rand = "0.8.5"
 orion = "0.17.4"
 anyhow = "1.0.70"
 users = "0.11.0"
+spinoff = "0.7.0"

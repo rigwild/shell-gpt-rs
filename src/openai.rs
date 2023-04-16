@@ -6,7 +6,8 @@ use std::env;
 
 const OPENAI_MODEL: &'static str = "gpt-3.5-turbo";
 
-const PRE_PROMPT_SHELL_SCRIPT: &'static str = "I want you to generate a valid bash script following a specific request. \
+const PRE_PROMPT_SHELL_SCRIPT: &'static str = "You are an expert at creating bash scripts. \
+                    I want you to generate a valid bash script following a specific request. \
                     You must only answer with the script that will be run on the target system. \
                     Do not write something like \"this is the script you asked:\", just print the script ONLY.
                     Do not write a warning message, only print the script itself.";

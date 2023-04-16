@@ -1,5 +1,5 @@
 use shell_gpt::config::Config;
-use shell_gpt::{run};
+use shell_gpt::run;
 use std::{env, process};
 
 fn main() {
@@ -22,7 +22,9 @@ Examples:
   gpt --shell show the list of files in the current directory with human-readable file size
   gpt -s find the top 10 biggest files in the current directory
   gpt -s find the top 10 biggest files in the current tree recursive
-  gpt --raw --shfind the top 10 biggest files in the current tree recursive
+  gpt --raw --shell find the top 10 biggest files in the current tree recursive
+  gpt --raw --shell find the top 10 biggest files in the current tree recursive > 10_biggest_files.sh
+  gpt --raw tell me a good joke | curl -X POST -d @- https://example.com/api/jokes
 
 shell-gpt-rs - https://github.com/rigwild/shell-gpt-rs
 ");

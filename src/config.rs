@@ -6,7 +6,6 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 use std::{env, fs, io};
-use users::{get_current_uid, get_user_by_uid};
 
 #[derive(Debug)]
 pub struct CliArgs {
@@ -159,10 +158,9 @@ fn get_config_openai_api_key_path() -> PathBuf {
 fn get_config_encryption_password() -> String {
     const ENCRYPTION_PASSWORD_SUFFIX: &'static str =
         "shell-gpt-rs-EL9Kaesj7Q6pc9BzsfxVpjPbNnuj8bGJ";
-    let user = get_user_by_uid(get_current_uid()).unwrap();
     format!(
         "{}_{}",
-        user.name().to_str().unwrap(),
+        whoami::username(),
         ENCRYPTION_PASSWORD_SUFFIX
     )
 }

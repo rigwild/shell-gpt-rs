@@ -2,7 +2,7 @@ use crate::errors::ShellGptError;
 use regex::Regex;
 use reqwest::blocking::Client as HttpClient;
 use serde::{Deserialize, Serialize};
-use std::env;
+use std::{env, time::Duration};
 
 const OPENAI_MODEL: &'static str = "gpt-3.5-turbo";
 
@@ -18,13 +18,13 @@ pub enum PrePrompt {
     ShellScript,
 }
 
-pub fn ask_chatgpt(input: &str, pre_prompt: PrePrompt, api_key: &str) -> anyhow::Result<String> {
+pub fn ask_chatgpt(input: &str, pre_prompt: PrePrompt, api_key: &str, timeout: Option<Duration>) -> anyhow::Result<String> {
     if let Ok(response) = env::var("OPENAI_API_RESPONSE_MOCK") {
         return Ok(response);
     }
     let pre_prompt = get_pre_prompt(pre_prompt);
     let messages = vec![Message::User(pre_prompt.as_str()), Message::User(input)];
-    request_chatgpt_api(messages, api_key)
+    request_chatgpt_api(messages, api_key, timeout)
 }
 
 /// Even with a pre-prompt indicating to not use code blocks and not give explanations,
@@ -44,13 +44,13 @@ fn get_pre_prompt(pre_prompt: PrePrompt) -> String {
     }
 }
 
-fn request_chatgpt_api(messages: Vec<Message>, api_key: &str) -> anyhow::Result<String> {
+fn request_chatgpt_api(messages: Vec<Message>, api_key: &str, timeout: Option<Duration>) -> anyhow::Result<String> {
     let body = ChatRequestInput {
         model: OPENAI_MODEL.to_string(),
         messages,
     };
 
-    let client = HttpClient::new();
+    let client = HttpClient::builder().timeout(timeout).build()?;
     let resp = client
         .post("https://api.openai.com/v1/chat/completions")
         .header("Authorization", format!("Bearer {api_key}"))

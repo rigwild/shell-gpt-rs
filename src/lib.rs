@@ -25,6 +25,7 @@ pub fn run(cli_args: &CliArgs, config: &Config) -> anyhow::Result<String> {
             cli_args.input.as_str(),
             cli_args.pre_prompt,
             config.openai_api_key.as_str(),
+            cli_args.timeout,
         );
         spinner.stop();
         let response = response?;
@@ -39,6 +40,7 @@ pub fn run(cli_args: &CliArgs, config: &Config) -> anyhow::Result<String> {
             cli_args.input.as_str(),
             cli_args.pre_prompt,
             config.openai_api_key.as_str(),
+            cli_args.timeout,
         );
         let mut response = response?;
         if cli_args.pre_prompt == openai::PrePrompt::ShellScript {

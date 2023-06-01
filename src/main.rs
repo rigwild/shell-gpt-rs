@@ -14,6 +14,7 @@ Usage: gpt <your_question>
 Options:
   -s  --shell           Ask ChatGPT for a shell script                                                  [boolean=false]
       --raw             Only output the script, no spinner or interactive prompt                        [boolean=false]
+      --timeout         Timeout in seconds for ChatGPT response (default = no timeout)                  [number]
       --clear-config    Remove local config, including the OpenAI API key at `~/.config/shell-gpt-rs`   [boolean]
   -h, --help            Show help                                                                       [boolean]
 

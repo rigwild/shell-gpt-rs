@@ -5,6 +5,7 @@ use directories::ProjectDirs;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
+use std::time::Duration;
 use std::{env, fs, io};
 
 #[derive(Debug)]
@@ -15,6 +16,7 @@ pub struct CliArgs {
     pub pre_prompt: openai::PrePrompt,
     /// Just print the answer - No spinner, pretty-print, or interactive action
     pub raw: bool,
+    pub timeout: Option<Duration>,
 }
 
 #[derive(Debug)]
@@ -43,14 +45,22 @@ impl Config {
         let mut clear_saved_config = false;
         let mut pre_prompt = openai::PrePrompt::NoPrePrompt;
         let mut raw = false;
+        let mut timeout = None;
 
-        args.iter().for_each(|x| match x.trim() {
-            "--help" | "-h" => show_help = true,
-            "--shell" | "--bash" | "--script" | "-s" => pre_prompt = openai::PrePrompt::ShellScript,
-            "--remove-config" | "--delete-config" | "--clear-config" => clear_saved_config = true,
-            "--raw" => raw = true,
-            _ => {}
-        });
+        let mut iter = args.iter();
+        while let Some(x) = iter.next() {
+            match x.trim() {
+                "--help" | "-h" => show_help = true,
+                "--shell" | "--bash" | "--script" | "-s" => pre_prompt = openai::PrePrompt::ShellScript,
+                "--remove-config" | "--delete-config" | "--clear-config" => clear_saved_config = true,
+                "--raw" => raw = true,
+                "--timeout" => if let Some(arg) = iter.next() {
+                    let seconds = arg.trim().parse::<u64>().expect("Invalid timeout value");
+                    timeout = Some(Duration::from_secs(seconds));
+                },
+                _ => {}
+            };
+        }
 
         CliArgs {
             input,
@@ -58,6 +68,7 @@ impl Config {
             clear_saved_config,
             pre_prompt,
             raw,
+            timeout,
         }
     }
 }

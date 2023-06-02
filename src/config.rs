@@ -38,29 +38,40 @@ impl Config {
     }
 
     pub fn parse_cli_args(args: Vec<String>) -> CliArgs {
-        let args: Vec<String> = args.iter().skip(1).cloned().collect();
-
-        let input = args.join(" ");
         let mut show_help = false;
         let mut clear_saved_config = false;
         let mut pre_prompt = openai::PrePrompt::NoPrePrompt;
         let mut raw = false;
         let mut timeout = None;
 
-        let mut iter = args.iter();
-        while let Some(x) = iter.next() {
+        // Skip the first argument, which is the name of the binary, and then process any flags given.
+        //
+        // Use a peekable iterator so that we can look ahead without advancing; if the next argument is a
+        // flag, we handle it and advance the iterator. Otherwise, assume the input has started and break
+        // out of the while loop without advancing the iterator.
+
+        let mut iter = args.into_iter().skip(1).peekable();
+        while let Some(x) = iter.peek() {
             match x.trim() {
                 "--help" | "-h" => show_help = true,
                 "--shell" | "--bash" | "--script" | "-s" => pre_prompt = openai::PrePrompt::ShellScript,
                 "--remove-config" | "--delete-config" | "--clear-config" => clear_saved_config = true,
                 "--raw" => raw = true,
-                "--timeout" => if let Some(arg) = iter.next() {
-                    let seconds = arg.trim().parse::<u64>().expect("Invalid timeout value");
-                    timeout = Some(Duration::from_secs(seconds));
+                "--timeout" => {
+                    iter.next();
+                    if let Some(arg) = iter.peek() {
+                        let seconds = arg.trim().parse::<u64>().expect("Invalid timeout value");
+                        timeout = Some(Duration::from_secs(seconds));
+                    }
                 },
-                _ => {}
+                _ => break,
             };
+
+            iter.next();
         }
+
+        // Collect the remaining, non-flag arguments into a string separated by spaces
+        let input = iter.collect::<Vec<String>>().join(" ");
 
         CliArgs {
             input,

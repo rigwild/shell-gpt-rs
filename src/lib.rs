@@ -20,7 +20,7 @@ const LOADING_MESSAGES: [&'static str; 7] = [
 
 pub fn run(cli_args: &CliArgs, config: &Config) -> anyhow::Result<String> {
     if !cli_args.raw {
-        let spinner = Spinner::new(spinners::Dots, get_loading_message(), Color::Blue);
+        let mut spinner = Spinner::new(spinners::Dots, get_loading_message(), Color::Blue);
         let response = openai::ask_chatgpt(
             cli_args.input.as_str(),
             cli_args.pre_prompt,
